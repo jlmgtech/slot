@@ -39,12 +39,12 @@ async function main_loop(slot) {
     const name = new Store("");
 
     await slot.capture(() => <>
-        <div> Your name is '{name}'</div>
-        <input type="text" onInput={name.bind} value={name} placeholder="enter your name" />
+        <div> Your name is '{+name}'</div>
+        <input type="text" onInput={name.bind} value={+name} placeholder="enter your name" />
         <button onClick={slot.answer}>done</button>
     </>);
 
-    await show.show("Your name is " + name.get());
+    await show.show("Your name is " + name);
     await delay(1000);
 }
 
@@ -89,15 +89,15 @@ async function main_loop(slot) {
     const i = new Store(0);
 
     const [header, body, footer] = await stamp_layout(slot);
-    await header.show(() => html `<nav>header here ${i}</nav>`);
-    await footer.show(() => html `<footer>this is the footer ${i}</footer>`);
+    await header.show(() => html `<nav>header here ${+i}</nav>`);
+    await footer.show(() => html `<footer>this is the footer ${+i}</footer>`);
 
     await click_flow(body, i);
 }
 
 async function click_flow(slot, i) {
     await slot.capture(() => html `
-        <div>You clicked the button ${i} times.</div>
+        <div>You clicked the button ${+i} times.</div>
         <div><button onClick=${() => i.set(i+1)}>click here</button></div>
     `);
 }

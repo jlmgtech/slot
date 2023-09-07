@@ -6,6 +6,7 @@ export default function ReactiveShot(classDef) {
 
         let lastCancel = ()=>{};
         const oldShow = this.show;
+
         this.show = (compFunc, opts={}) => {
             if (typeof compFunc !== "function") {
                 throw new TypeError("1st arg to show must be a function");

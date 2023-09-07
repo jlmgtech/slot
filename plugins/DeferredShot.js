@@ -1,7 +1,7 @@
 export default function DeferredShot(classDef) {
-    return function(...args) {
+    return function(opts) {
 
-        classDef.apply(this, args);
+        classDef.call(this, opts);
 
         this.deferrals = [];
         this.defer = (action) => {

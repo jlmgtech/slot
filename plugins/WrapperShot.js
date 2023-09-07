@@ -46,9 +46,9 @@ function hashStates(comp) {
 }
 
 export default function WrapperShot(classDef) {
-    return function(...args) {
+    return function(opts) {
 
-        classDef.apply(this, args);
+        classDef.call(this, opts);
 
         this.states = [];
         let Wrapper = getWrapper(this.states);

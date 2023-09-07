@@ -1,6 +1,6 @@
 export default function CaptureShot(classDef) {
-  return function(...args) {
-    classDef.apply(this, args);
+  return function(opts) {
+    classDef.call(this, opts);
     this.resolver = () => {};
 
     this.answer = async (value) => {

@@ -1,16 +1,31 @@
 export default function GroupShot(classDef) {
-    return function(...args) {
-        classDef.apply(this, args);
+    return function(opts) {
+        classDef.call(this, opts);
 
-        // <${Slot} group=${grp} flow=${grp.add(slot => edit_page(slot, page))} onReturn=${grp.addReturn()} />
+        const group = opts.group ?? null;
+        let slot_id = -1;
+        if (group) {
+            slot_id = group.add(this);
+        }
 
-        const oldRunLoop = this.runloop;
-        this.runloop = async function runloop(flow, onReturn, group) {
+        // <${Slot} group=${grp} ...>
+
+        const oldCapture = this.capture;
+        this.capture = async (...args) => {
             if (group) {
-                flow = group.add(flow);
-                onReturn = group.addReturn(onReturn);
+                group.onCapture(slot_id);
             }
-            return oldRunLoop(flow, onReturn, group);
+            return await oldCapture(...args);
         };
+
+        const oldOnReturn = this.onreturn;
+        this.onreturn = async (...args) => {
+            if (group) {
+                group.onEnd(slot_id, this.running);
+            }
+            return await oldOnReturn(...args);
+        };
+
+
     };
 }

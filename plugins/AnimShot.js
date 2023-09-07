@@ -1,6 +1,6 @@
 export default function AnimShot(classDef) {
-    return function(...args) {
-        classDef.apply(this, args);
+    return function(opts) {
+        classDef.call(this, opts);
 
         const oldShow = this.show;
 

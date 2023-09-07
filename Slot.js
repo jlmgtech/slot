@@ -12,14 +12,14 @@ export { default as SlotGroup } from "./SlotGroup.js";
 // plugins are class decorators:
 const SlotClass = GroupShot(AnimSlot(CaptureShot(ReactiveShot(DeferredShot(Shot)))));
 
-export default function Slot({flow, onReturn=null, group=null}) {
+export default function Slot(opts) {
     const [comp, setComp] = useState('');
     useEffect(() => {
-        const opts = {setComp};
+        opts = {setComp, ...opts};
         const slot = new SlotClass(opts);
-        slot.initialize().then(() => slot.runloop(flow, onReturn, group));
+        slot.initialize().then(() => slot.runloop());
         return slot.finalize;
-    }, [flow, onReturn, group]);
+    }, Object.values(opts));
     return comp;
 }
 

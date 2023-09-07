@@ -1,8 +1,17 @@
-export default function Shot({setComp}) {
-    let running = false;
+export default function Shot({setComp, onReturn, flow}) {
+
+    if (typeof flow !== "function") {
+        if (typeof flow === "undefined") {
+            throw new ReferenceError("flow is undefined");
+        } else {
+            throw new TypeError("flow must be a function");
+        }
+    }
+
+    this.running = false;
 
     this.initialize = async () => {
-        running = true;
+        this.running = true;
     };
 
     this.show = async (comp, _opts) => {
@@ -12,14 +21,15 @@ export default function Shot({setComp}) {
         return this.show("");
     };
     this.finalize = async () => {
-        running = false;
+        this.running = false;
     };
+
     // used when the flow function exits for any reason:
     // used to implement deferred statements.
     this.onreturn = async () => {};
 
     const slot = this;
-    this.runloop = async function runloop(flow, onReturn) {
+    this.runloop = async function runloop() {
         onReturn = onReturn || (()=>{});
         let err = false;
         try {
@@ -31,8 +41,8 @@ export default function Shot({setComp}) {
             await slot.onreturn();
             if (err) {
                 throw err;
-            } else if (running) {
-                setTimeout(() => runloop(flow, onReturn));
+            } else if (slot.running) {
+                setTimeout(() => runloop());
             }
         }
     };
